@@ -1,5 +1,6 @@
 package site.stocktrading.api.trade.service;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
@@ -11,9 +12,12 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import site.stocktrading.api.stock.domain.Stock;
+import site.stocktrading.api.trade.domain.Trade;
 import site.stocktrading.global.util.delay.DelayService;
+import site.stocktrading.global.util.time.TimeService;
 
 @SpringBootTest
 class TradeServiceTest {
@@ -23,6 +27,9 @@ class TradeServiceTest {
 
 	@MockBean
 	private DelayService delayService;
+
+	@SpyBean
+	private TimeService timeService;
 
 	@BeforeEach
 	void setUp() {
@@ -35,11 +42,13 @@ class TradeServiceTest {
 		// given
 		Stock samsung = new Stock("samsung", 50000);
 		int quantity = 10;
+		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
+		BDDMockito.given(timeService.now()).willReturn(tradeTime);
 		// when
-		CompletableFuture<String> future = service.buyStock(samsung, quantity);
+		CompletableFuture<Trade> future = service.buyStock(samsung, quantity);
 		// then
-		String actual = future.join();
-		String expected = "Successfully bought " + quantity + " shares of " + samsung;
-		Assertions.assertThat(actual).hasToString(expected);
+		Trade actual = future.join();
+		Trade expected = Trade.of(samsung, quantity, tradeTime);
+		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 }
