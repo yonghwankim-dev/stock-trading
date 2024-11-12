@@ -18,6 +18,7 @@ public class StockPriceSimulator {
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private final Random random = new Random();
 	private final StockService service;
+	private final RangeRandomPercentageGenerator generator;
 
 	public void startSimulation(){
 		scheduler.scheduleAtFixedRate(this::updatePrices, 0, 1, TimeUnit.SECONDS);
@@ -28,20 +29,13 @@ public class StockPriceSimulator {
 		for (Stock stock : stocks){
 			String name = stock.getName();
 			int currentPrice = stock.getPrice();
-			double percentageChange = getRandomPercentageChange();
+			double percentageChange = generator.generate();
 			int newPrice = (int)(currentPrice * (1 + percentageChange));
 
 			Stock newStock = new Stock(name, newPrice);
 			service.saveStock(newStock);
 			System.out.printf("Updated price to %s%n", newStock);
 		}
-	}
-
-	// 무작위 1~2% 변동 생성 (±1~2%)
-	private double getRandomPercentageChange() {
-		// -2% ~ +2% 사이의 랜덤 값 생성
-		double percentage = 0.01 + (0.01 * random.nextDouble()); // 1% ~ 2%
-		return random.nextBoolean() ? percentage : -percentage;
 	}
 
 	// 시뮬레이션 종료
