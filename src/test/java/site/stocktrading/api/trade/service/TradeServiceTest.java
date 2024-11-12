@@ -51,7 +51,7 @@ class TradeServiceTest {
 		CompletableFuture<Trade> future = service.buyStock(samsung, quantity);
 		// then
 		Trade actual = future.join();
-		Trade expected = Trade.of(samsung, quantity, tradeTime);
+		Trade expected = Trade.buy(samsung, quantity, tradeTime);
 		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 
