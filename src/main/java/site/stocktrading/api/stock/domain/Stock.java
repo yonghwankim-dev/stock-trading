@@ -5,7 +5,8 @@ import java.util.Map;
 import org.apache.logging.log4j.util.Strings;
 
 import lombok.EqualsAndHashCode;
-import site.stocktrading.api.stock.service.RangeRandomPercentageGenerator;
+import site.stocktrading.api.stock.service.RandomPercentageGenerator;
+import site.stocktrading.api.stock.service.RandomPriceGenerator;
 
 @EqualsAndHashCode
 public class Stock {
@@ -28,9 +29,14 @@ public class Stock {
 		return new Stock(name, 0);
 	}
 
-	public Stock newStock(RangeRandomPercentageGenerator generator) {
+	public Stock newStock(RandomPercentageGenerator generator) {
 		double percentageChange = generator.generate();
 		int newPrice = (int)(price * (1 + percentageChange));
+		return new Stock(name, newPrice);
+	}
+
+	public Stock newStock(RandomPriceGenerator generator) {
+		int newPrice = generator.generate();
 		return new Stock(name, newPrice);
 	}
 
