@@ -18,7 +18,7 @@ public class Trade {
 
 	}
 
-	public Trade(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {
+	private Trade(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {
 		this.stock = stock;
 		this.quantity = quantity;
 		this.tradeTime = tradeTime;
