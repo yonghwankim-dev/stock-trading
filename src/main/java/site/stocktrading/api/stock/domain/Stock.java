@@ -4,13 +4,17 @@ import java.util.Map;
 
 import org.apache.logging.log4j.util.Strings;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import site.stocktrading.api.stock.service.RandomPercentageGenerator;
 import site.stocktrading.api.stock.service.RandomPriceGenerator;
 
 @EqualsAndHashCode
 public class Stock {
+	@JsonProperty("name")
 	private final String name;
+	@JsonProperty("price")
 	private final int price;
 
 	public Stock(String name, int price) {
