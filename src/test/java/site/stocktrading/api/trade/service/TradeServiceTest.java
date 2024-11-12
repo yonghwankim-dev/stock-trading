@@ -1,20 +1,33 @@
 package site.stocktrading.api.trade.service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import site.stocktrading.api.stock.domain.Stock;
+import site.stocktrading.global.util.delay.DelayService;
 
 @SpringBootTest
 class TradeServiceTest {
 
 	@Autowired
 	private TradeService service;
+
+	@MockBean
+	private DelayService delayService;
+
+	@BeforeEach
+	void setUp() {
+		BDDMockito.willDoNothing().given(delayService).delay(1, ChronoUnit.SECONDS);
+	}
 
 	@DisplayName("종목이 주어지고 매수를 하는 경우에 비동기를 반환한다")
 	@Test
