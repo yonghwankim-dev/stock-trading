@@ -1,6 +1,7 @@
 package site.stocktrading.global.util.delay;
 
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public interface DelayService {
@@ -13,5 +14,8 @@ public interface DelayService {
 		}
 	}
 
-	void delayRandomSecond(int start, int end);
+	default void delayRandomSecond(int start, int end) {
+		long timeout = ThreadLocalRandom.current().nextLong(start, end + 1L);
+		delay(timeout, ChronoUnit.SECONDS);
+	}
 }
