@@ -25,17 +25,14 @@ public class StockPriceSimulator {
 	}
 
 	private void updatePrices() {
-		List<Stock> stocks = service.findAll();
-		for (Stock stock : stocks){
-			String name = stock.getName();
-			int currentPrice = stock.getPrice();
-			double percentageChange = generator.generate();
-			int newPrice = (int)(currentPrice * (1 + percentageChange));
+		service.findAll().stream()
+			.map(stock->stock.newStock(generator))
+			.map(service::saveStock)
+			.forEach(this::printStock);
+	}
 
-			Stock newStock = new Stock(name, newPrice);
-			service.saveStock(newStock);
-			System.out.printf("Updated price to %s%n", newStock);
-		}
+	private void printStock(Stock stock){
+		System.out.printf("Updated price to %s%n", stock);
 	}
 
 	// 시뮬레이션 종료
