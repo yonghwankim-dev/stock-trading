@@ -2,7 +2,8 @@ package site.stocktrading.api.stock.repository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Repository;
 
@@ -11,16 +12,16 @@ import site.stocktrading.api.stock.domain.Stock;
 @Repository
 public class MemoryStockRepository implements StockRepository{
 
-	private final List<Stock> store = new CopyOnWriteArrayList<>();
+	private final Map<String, Stock> store = new ConcurrentHashMap<>();
 
 	@Override
 	public Stock save(Stock stock) {
-		store.add(stock);
-		return stock;
+		return stock.saveTo(store);
 	}
 
 	@Override
 	public List<Stock> findAll() {
-		return Collections.unmodifiableList(store);
+		return store.values().stream()
+			.toList();
 	}
 }
