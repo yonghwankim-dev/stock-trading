@@ -8,9 +8,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import site.stocktrading.api.stock.domain.Stock;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class MemoryStockRepositoryTest {
 
@@ -18,7 +20,7 @@ class MemoryStockRepositoryTest {
 	private StockRepository repository;
 
 	@BeforeEach
-	void setup(){
+	void setup() {
 		repository.save(new Stock("samsung", 50000));
 		repository.save(new Stock("kakao", 40000));
 		repository.save(new Stock("sk hynix", 30000));
@@ -26,10 +28,10 @@ class MemoryStockRepositoryTest {
 
 	@DisplayName("종목 리스트를 조회한다")
 	@Test
-	void givenStocks_whenFindAll_thenReturnListOfStock(){
-	    // given
+	void givenStocks_whenFindAll_thenReturnListOfStock() {
+		// given
 
-	    // when
+		// when
 		List<Stock> actual = repository.findAll();
 		// then
 		Assertions.assertThat(actual).hasSize(3);

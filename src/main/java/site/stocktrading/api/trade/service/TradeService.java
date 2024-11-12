@@ -1,7 +1,6 @@
 package site.stocktrading.api.trade.service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
@@ -21,8 +20,18 @@ public class TradeService {
 
 	public CompletableFuture<Trade> buyStock(Stock stock, int quantity) {
 		return CompletableFuture.supplyAsync(() -> {
-			// 비즈니스 로직: 예시로 1초 지연
-			delayService.delay(1, ChronoUnit.SECONDS);
+			// 비즈니스 로직: 예시로 1초~3초 랜덤 지연
+			delayService.delayRandomSecond(1, 3);
+			// 주문 처리 성공
+			LocalDateTime tradeTime = timeService.now();
+			return Trade.of(stock, quantity, tradeTime);
+		});
+	}
+
+	public CompletableFuture<Trade> sellStock(Stock stock, int quantity) {
+		return CompletableFuture.supplyAsync(() -> {
+			// 비즈니스 로직: 예시로 1초~3초 지연
+			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
 			return Trade.of(stock, quantity, tradeTime);

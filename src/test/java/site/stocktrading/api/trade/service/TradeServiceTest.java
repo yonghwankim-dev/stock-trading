@@ -1,13 +1,13 @@
 package site.stocktrading.api.trade.service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +33,9 @@ class TradeServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		BDDMockito.willDoNothing().given(delayService).delay(1, ChronoUnit.SECONDS);
+		BDDMockito.willDoNothing()
+			.given(delayService)
+			.delayRandomSecond(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
 	}
 
 	@DisplayName("종목이 주어지고 매수를 하는 경우에 비동기를 반환한다")
