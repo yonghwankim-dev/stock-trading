@@ -1,6 +1,7 @@
 package site.stocktrading.api.stock.service;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RangeRandomPercentageGenerator implements RandomPercentageGenerator {
 
-	private final Random random = new Random();
+	private final ThreadLocalRandom random;
 	private final double range;
 
 	/**

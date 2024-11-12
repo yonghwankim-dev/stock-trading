@@ -1,5 +1,7 @@
 package site.stocktrading.api.stock.config;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +12,8 @@ public class StockConfig {
 
 	@Bean
 	public RangeRandomPercentageGenerator rangeRandomPercentageGenerator(){
-		return new RangeRandomPercentageGenerator(0.01);
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		double range = 0.01;
+		return new RangeRandomPercentageGenerator(random, range);
 	}
 }
