@@ -1,6 +1,7 @@
 package site.stocktrading.api.stock.service;
 
-import org.springframework.stereotype.Repository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -14,5 +15,9 @@ public class StockService {
 
 	public Stock saveStock(Stock stock){
 		return repository.save(stock);
+	}
+
+	public List<Stock> findAll() {
+		return repository.findAll();
 	}
 }
