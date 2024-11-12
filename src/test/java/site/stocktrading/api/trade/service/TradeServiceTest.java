@@ -2,6 +2,7 @@ package site.stocktrading.api.trade.service;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,5 +53,22 @@ class TradeServiceTest {
 		Trade actual = future.join();
 		Trade expected = Trade.of(samsung, quantity, tradeTime);
 		Assertions.assertThat(actual).isEqualTo(expected);
+	}
+
+	@DisplayName("0포함 음수 주식 개수가 주어지고 매수를 하는 경우에 거래를 취소한다")
+	@Test
+	void givenNegativeQuantity_whenBuyStock_thenCancelTrade() {
+		// given
+		Stock samsung = new Stock("samsung", 50000);
+		int quantity = 0;
+		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
+		BDDMockito.given(timeService.now()).willReturn(tradeTime);
+		// when
+		CompletableFuture<Trade> future = service.buyStock(samsung, quantity);
+		// then
+		Throwable throwable = Assertions.catchThrowable(future::join);
+		Assertions.assertThat(throwable)
+			.isInstanceOf(CompletionException.class)
+			.hasMessage("java.lang.IllegalArgumentException: Quantity can not be negative, quantity=0");
 	}
 }
