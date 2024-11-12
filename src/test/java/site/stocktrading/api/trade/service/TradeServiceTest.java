@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import site.stocktrading.api.stock.domain.Stock;
-import site.stocktrading.api.trade.domain.Trade;
+import site.stocktrading.api.trade.domain.Order;
 import site.stocktrading.global.util.delay.DelayService;
 import site.stocktrading.global.util.time.TimeService;
 
@@ -48,10 +48,10 @@ class TradeServiceTest {
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
 		BDDMockito.given(timeService.now()).willReturn(tradeTime);
 		// when
-		CompletableFuture<Trade> future = service.buyStock(samsung, quantity);
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity);
 		// then
-		Trade actual = future.join();
-		Trade expected = Trade.buy(samsung, quantity, tradeTime);
+		Order actual = future.join();
+		Order expected = Order.buy(samsung, quantity, tradeTime);
 		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 
@@ -64,7 +64,7 @@ class TradeServiceTest {
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
 		BDDMockito.given(timeService.now()).willReturn(tradeTime);
 		// when
-		CompletableFuture<Trade> future = service.buyStock(samsung, quantity);
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity);
 		// then
 		Throwable throwable = Assertions.catchThrowable(future::join);
 		Assertions.assertThat(throwable)

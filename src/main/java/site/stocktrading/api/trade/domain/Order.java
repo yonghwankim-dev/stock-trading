@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import site.stocktrading.api.stock.domain.Stock;
 
 @EqualsAndHashCode
-public class Trade {
+public class Order {
 	private final Stock stock;
 	private final int quantity;
 	private final LocalDateTime tradeTime;
@@ -18,7 +18,7 @@ public class Trade {
 
 	}
 
-	private Trade(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {
+	private Order(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {
 		this.stock = stock;
 		this.quantity = quantity;
 		this.tradeTime = tradeTime;
@@ -29,12 +29,12 @@ public class Trade {
 		}
 	}
 
-	public static Trade buy(Stock stock, int quantity, LocalDateTime tradeTime) {
-		return new Trade(stock, quantity, tradeTime, Type.BUY);
+	public static Order buy(Stock stock, int quantity, LocalDateTime tradeTime) {
+		return new Order(stock, quantity, tradeTime, Type.BUY);
 	}
 
-	public static Trade sell(Stock stock, int quantity, LocalDateTime tradeTime) {
-		return new Trade(stock, quantity, tradeTime, Type.SELL);
+	public static Order sell(Stock stock, int quantity, LocalDateTime tradeTime) {
+		return new Order(stock, quantity, tradeTime, Type.SELL);
 	}
 
 	@Override
