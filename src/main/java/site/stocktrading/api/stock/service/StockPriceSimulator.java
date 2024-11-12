@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import site.stocktrading.api.stock.domain.Stock;
 
 @Component
 @RequiredArgsConstructor
@@ -21,21 +21,18 @@ public class StockPriceSimulator {
 
 	public void startSimulation() {
 		final int initialDelay = 0;
-		final int period = 1;
+		final int period = 10;
 		scheduler.scheduleAtFixedRate(this::updatePrices, initialDelay, period, TimeUnit.SECONDS);
 	}
 
 	private void updatePrices() {
 		service.findAll().stream()
 			.map(stock -> stock.newStock(generator))
-			.map(service::saveStock)
-			.forEach(this::printStock);
+			.forEach(service::saveStock);
+		log.info("finish updatePrices");
 	}
 
-	private void printStock(Stock stock) {
-		System.out.printf("Updated price to %s%n", stock);
-	}
-
+	@PreDestroy
 	public void stopSimulation() {
 		scheduler.shutdown();
 		try {
@@ -47,5 +44,6 @@ public class StockPriceSimulator {
 			scheduler.shutdownNow();
 			Thread.currentThread().interrupt();
 		}
+		log.info("shutdown scheduler {}", scheduler);
 	}
 }
