@@ -12,4 +12,6 @@ public interface DelayService {
 			Thread.currentThread().interrupt();
 		}
 	}
+
+	void delayRandomSecond(int start, int end);
 }
