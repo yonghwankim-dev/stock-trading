@@ -13,8 +13,8 @@ import site.stocktrading.api.stock.repository.StockRepository;
 public class StockService {
 	private final StockRepository repository;
 
-	public Stock saveStock(Stock stock){
-		return repository.save(stock);
+	public void saveStock(Stock stock) {
+		repository.save(stock);
 	}
 
 	public List<Stock> findAll() {
