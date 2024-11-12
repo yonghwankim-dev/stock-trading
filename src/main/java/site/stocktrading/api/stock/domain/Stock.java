@@ -1,8 +1,9 @@
 package site.stocktrading.api.stock.domain;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Stock {
-	private String name;
-	private int price;
-
-
+	private final String name;
+	private final int price;
 }

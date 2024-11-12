@@ -1,6 +1,6 @@
 package site.stocktrading.api.stock.repository;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -17,5 +17,10 @@ public class MemoryStockRepository implements StockRepository{
 	public Stock save(Stock stock) {
 		store.add(stock);
 		return stock;
+	}
+
+	@Override
+	public List<Stock> findAll() {
+		return Collections.unmodifiableList(store);
 	}
 }
