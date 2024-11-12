@@ -24,6 +24,10 @@ public class Stock {
 		}
 	}
 
+	public static Stock zero(String name) {
+		return new Stock(name, 0);
+	}
+
 	public Stock newStock(RangeRandomPercentageGenerator generator) {
 		double percentageChange = generator.generate();
 		int newPrice = (int)(price * (1 + percentageChange));
