@@ -20,7 +20,9 @@ public class StockPriceSimulator {
 	private final RangeRandomPercentageGenerator generator;
 
 	public void startSimulation() {
-		scheduler.scheduleAtFixedRate(this::updatePrices, 0, 1, TimeUnit.SECONDS);
+		final int initialDelay = 0;
+		final int period = 1;
+		scheduler.scheduleAtFixedRate(this::updatePrices, initialDelay, period, TimeUnit.SECONDS);
 	}
 
 	private void updatePrices() {
