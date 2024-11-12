@@ -24,7 +24,7 @@ public class TradeService {
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
-			return Trade.of(stock, quantity, tradeTime);
+			return Trade.buy(stock, quantity, tradeTime);
 		});
 	}
 
@@ -34,7 +34,7 @@ public class TradeService {
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
-			return Trade.of(stock, quantity, tradeTime);
+			return Trade.sell(stock, quantity, tradeTime);
 		});
 	}
 }

@@ -10,24 +10,31 @@ public class Trade {
 	private final Stock stock;
 	private final int quantity;
 	private final LocalDateTime tradeTime;
+	private final Type type;
 
-	public Trade(Stock stock, int quantity, LocalDateTime tradeTime) {
+	private enum Type {
+		BUY,
+		SELL;
+
+	}
+
+	public Trade(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {
 		this.stock = stock;
 		this.quantity = quantity;
 		this.tradeTime = tradeTime;
+		this.type = type;
 
 		if (this.quantity <= 0) {
 			throw new IllegalArgumentException("Quantity can not be negative, quantity=" + quantity);
 		}
 	}
 
-	public static Trade now(Stock stock, int quantity) {
-		LocalDateTime now = LocalDateTime.now();
-		return new Trade(stock, quantity, now);
+	public static Trade buy(Stock stock, int quantity, LocalDateTime tradeTime) {
+		return new Trade(stock, quantity, tradeTime, Type.BUY);
 	}
 
-	public static Trade of(Stock stock, int quantity, LocalDateTime tradeTime) {
-		return new Trade(stock, quantity, tradeTime);
+	public static Trade sell(Stock stock, int quantity, LocalDateTime tradeTime) {
+		return new Trade(stock, quantity, tradeTime, Type.SELL);
 	}
 
 	@Override
