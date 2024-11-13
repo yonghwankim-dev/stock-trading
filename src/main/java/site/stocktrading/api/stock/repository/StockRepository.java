@@ -13,6 +13,6 @@ public interface StockRepository {
 
 	Optional<Stock> find(String name);
 
-	void deleteStock(String name);
+	Stock deleteStock(String name);
 
 }
