@@ -38,11 +38,7 @@ public class Order {
 	public static Order sell(Account account, Stock stock, int quantity, LocalDateTime time) {
 		return new Order(account, stock, quantity, time, Type.SELL);
 	}
-
-	public boolean isTypeOf(Type type) {
-		return this.type == type;
-	}
-
+	
 	@Override
 	public String toString() {
 		return String.format("(account=%s, stock=%s, quantity=%s, tradeTime=%s)", account, stock, quantity, time);

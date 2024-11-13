@@ -11,4 +11,9 @@ public class Trade {
 		this.buyOrder = buyOrder;
 		this.sellOrder = sellOrder;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("(buyOrder=%s, sellOrder=%s)", buyOrder, sellOrder);
+	}
 }
