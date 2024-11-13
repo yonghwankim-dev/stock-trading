@@ -2,7 +2,6 @@ package site.stocktrading.api.trade.service;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
 import site.stocktrading.api.trade.domain.Trade;
+import site.stocktrading.api.trade.exception.OrderException;
+import site.stocktrading.api.trade.exception.TradeException;
 import site.stocktrading.global.util.delay.DelayService;
 import site.stocktrading.global.util.time.TimeService;
 
@@ -46,20 +47,18 @@ public class TradeService {
 
 	// 매수와 매도 주문을 비동기적으로 처리 후 결과를 받아오는 예시
 	public CompletableFuture<Trade> processOrders(Stock stock, int quantity) {
-		CompletableFuture<Order> buyFuture = buyStock(stock, quantity);
-		CompletableFuture<Order> sellFuture = sellStock(stock, quantity);
+		CompletableFuture<Order> buyFuture = buyStock(stock, quantity)
+			.exceptionally(throwable -> {
+				throw new OrderException("Buy Operation Failed", throwable);
+			});
+		CompletableFuture<Order> sellFuture = sellStock(stock, quantity)
+			.exceptionally(throwable -> {
+				throw new OrderException("Sell Operation Failed", throwable);
+			});
 
-		return CompletableFuture.allOf(buyFuture, sellFuture).thenApplyAsync(unused -> {
-			try {
-				Order buyOrder = buyFuture.get();
-				Order sellOrder = sellFuture.get();
-				return new Trade(buyOrder, sellOrder);
-			} catch (ExecutionException e) {
-				throw new TradeException("fail trade", e);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				throw new TradeException("Trade interrupted", e);
-			}
-		});
+		return buyFuture.thenCombine(sellFuture, Trade::new)
+			.exceptionally(throwable -> {
+				throw new TradeException("Trade failed due to an operation failure", throwable);
+			});
 	}
 }

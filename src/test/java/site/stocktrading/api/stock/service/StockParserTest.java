@@ -7,9 +7,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import site.stocktrading.api.stock.domain.Stock;
 
+@ActiveProfiles("test")
 class StockParserTest {
 
 	private StockParser parser;
