@@ -39,8 +39,14 @@ public class Order {
 		return new Order(account, stock, quantity, time, Type.SELL);
 	}
 
+	/**
+	 * 체결 주문 수량을 계산
+	 *
+	 * @param order 매수 주문
+	 * @return 체결 주문 수량 개수
+	 */
 	public int calFilledQuantity(Order order) {
-		return this.quantity - order.quantity;
+		return Math.min(this.quantity, order.quantity);
 	}
 
 	@Override
