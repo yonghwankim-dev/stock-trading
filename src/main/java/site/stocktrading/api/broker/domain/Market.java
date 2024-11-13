@@ -1,9 +1,12 @@
 package site.stocktrading.api.broker.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import site.stocktrading.api.account.domain.Account;
+import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
 import site.stocktrading.api.trade.domain.Trade;
 
@@ -26,6 +29,14 @@ public class Market {
 	 * - 거래 체결시 하나의 매수 주문과 2개 이상의 매도 주문이 존재하는 경우 주문 시간이 빠른 순서대로 체결된다
 	 */
 	public Trade attemptTrade() {
-		return null;
+		Account buyer = new Account(1L);
+		Stock samsung = new Stock("삼성전자보통주", 50000);
+		LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
+		Order buyOrder = Order.buy(buyer, samsung, 5, buyOrderTime);
+
+		Account seller = new Account(2L);
+		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
+		Order sellOrder = Order.sell(seller, samsung, 7, sellOrderTime);
+		return new Trade(buyOrder, sellOrder);
 	}
 }
