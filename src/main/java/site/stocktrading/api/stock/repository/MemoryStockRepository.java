@@ -31,7 +31,7 @@ public class MemoryStockRepository implements StockRepository {
 	}
 
 	@Override
-	public void deleteStock(String name) {
-		store.remove(name);
+	public Stock deleteStock(String name) {
+		return store.remove(name);
 	}
 }

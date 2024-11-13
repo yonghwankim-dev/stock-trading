@@ -36,13 +36,13 @@ public class StockRestController {
 		return ResponseEntity.ok(service.findAll());
 	}
 
-	@GetMapping("/name")
+	@GetMapping("/detail")
 	public ResponseEntity<Stock> getStock(@RequestParam String name) {
 		return ResponseEntity.ok(service.find(name));
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Void> deleteStock(@RequestBody String name) {
+	public ResponseEntity<Void> deleteStock(@RequestParam String name) {
 		service.deleteStock(name);
 		return ResponseEntity.ok().build();
 	}
