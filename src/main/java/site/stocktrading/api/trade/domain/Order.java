@@ -14,8 +14,7 @@ public class Order {
 
 	private enum Type {
 		BUY,
-		SELL;
-
+		SELL
 	}
 
 	private Order(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {

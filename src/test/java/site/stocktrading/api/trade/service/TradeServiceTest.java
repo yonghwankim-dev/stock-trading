@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
+import site.stocktrading.api.trade.domain.Trade;
 import site.stocktrading.global.util.delay.DelayService;
 import site.stocktrading.global.util.time.TimeService;
 
@@ -70,5 +71,21 @@ class TradeServiceTest {
 		Assertions.assertThat(throwable)
 			.isInstanceOf(CompletionException.class)
 			.hasMessage("java.lang.IllegalArgumentException: Quantity can not be negative, quantity=0");
+	}
+
+	@DisplayName("매수, 매도 주문이 주어지고 주문이 성공하면 거래를 체결한다")
+	@Test
+	void givenOrders_whenProcessOrders_thenReturnTrade() {
+		// given
+		Stock samsung = new Stock("samsung", 50000);
+		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
+		BDDMockito.given(timeService.now()).willReturn(tradeTime);
+		// when
+		CompletableFuture<Trade> future = service.processOrders(samsung, 10);
+
+		// then
+		Trade actual = future.join();
+		Trade expected = new Trade(Order.buy(samsung, 10, tradeTime), Order.sell(samsung, 10, tradeTime));
+		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 }
