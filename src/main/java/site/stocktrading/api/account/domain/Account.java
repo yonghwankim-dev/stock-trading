@@ -9,4 +9,9 @@ public class Account {
 	public Account(Long id) {
 		this.id = id;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("(id=%d)", id);
+	}
 }
