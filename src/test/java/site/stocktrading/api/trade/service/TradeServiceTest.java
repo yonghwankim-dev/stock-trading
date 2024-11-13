@@ -93,8 +93,10 @@ class TradeServiceTest {
 		Trade actual = service.processOrders(samsung, 10).join();
 
 		// then
-		Trade expected = new Trade(Order.buy(new Account(1L), samsung, 10, tradeTime),
-			Order.sell(new Account(1L), samsung, 10, tradeTime));
+		Order buyOrder = Order.buy(new Account(1L), samsung, 10, tradeTime);
+		Order sellOrder = Order.sell(new Account(1L), samsung, 10, tradeTime);
+		int filledQuantity = 10;
+		Trade expected = new Trade(buyOrder, sellOrder, filledQuantity);
 		assertThat(actual).isEqualTo(expected);
 	}
 

@@ -44,7 +44,8 @@ class MarketTest {
 		// when
 		Trade actual = market.attemptTrade();
 		// then
-		Trade expected = new Trade(buyOrder, sellOrder);
+		int filledQuantity = 5;
+		Trade expected = new Trade(buyOrder, sellOrder, filledQuantity);
 		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 }
