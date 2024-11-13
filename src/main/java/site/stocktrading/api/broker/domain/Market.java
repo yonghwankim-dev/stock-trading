@@ -1,8 +1,8 @@
 package site.stocktrading.api.broker.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import lombok.extern.slf4j.Slf4j;
 import site.stocktrading.api.account.domain.Account;
@@ -13,11 +13,17 @@ import site.stocktrading.api.trade.domain.Trade;
 @Slf4j
 public class Market {
 
-	private final List<Order> orders = new ArrayList<>();
+	private final Queue<Order> buyOrders = new PriorityQueue<>(Order::compareTime);
+	private final Queue<Order> sellOrders = new PriorityQueue<>(Order::compareTime);
 
 	public void acceptOrder(Order order) {
-		orders.add(order);
-		log.info("accept the Order, order={}", order);
+		if (order.isBuyOrder()) {
+			buyOrders.add(order);
+			log.info("accept the buyOrder, order={}", order);
+		} else {
+			sellOrders.add(order);
+			log.info("accept the sellOrder, order={}", order);
+		}
 	}
 
 	/**
@@ -37,7 +43,7 @@ public class Market {
 		Account seller = new Account(2L);
 		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
 		Order sellOrder = Order.sell(seller, samsung, 7, sellOrderTime);
-		
+
 		return Trade.filled(buyOrder, sellOrder);
 	}
 }

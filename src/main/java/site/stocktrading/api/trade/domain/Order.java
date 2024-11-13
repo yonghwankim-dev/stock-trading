@@ -17,6 +17,7 @@ public class Order {
 	public enum Type {
 		BUY,
 		SELL;
+
 	}
 
 	private Order(Account account, Stock stock, int quantity, LocalDateTime time, Type type) {
@@ -47,6 +48,14 @@ public class Order {
 	 */
 	public int calFilledQuantity(Order order) {
 		return Math.min(this.quantity, order.quantity);
+	}
+
+	public boolean isBuyOrder() {
+		return this.type == Type.BUY;
+	}
+
+	public int compareTime(Order order) {
+		return time.compareTo(order.time);
 	}
 
 	@Override
