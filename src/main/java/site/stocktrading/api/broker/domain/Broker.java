@@ -19,7 +19,9 @@ public class Broker {
 
 	public Order orderBuyStock(Account buyer, Stock stock, int quantity) {
 		LocalDateTime orderTime = timeService.now();
-		return Order.buy(buyer, stock, quantity, orderTime);
+		Order order = Order.buy(buyer, stock, quantity, orderTime);
+		market.acceptOrder(order);
+		return order;
 	}
 
 	public Order orderSellStock(Account seller, Stock stock, int quantity) {
