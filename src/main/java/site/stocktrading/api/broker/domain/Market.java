@@ -9,10 +9,10 @@ import site.stocktrading.api.trade.domain.Order;
 @Slf4j
 public class Market {
 
-	private final List<Order> buyOrders = new ArrayList<>();
+	private final List<Order> orders = new ArrayList<>();
 
 	public void acceptOrder(Order order) {
-		boolean add = buyOrders.add(order);
-		log.info("accept the Order, order={}, add={}", order, add);
+		orders.add(order);
+		log.info("accept the Order, order={}", order);
 	}
 }
