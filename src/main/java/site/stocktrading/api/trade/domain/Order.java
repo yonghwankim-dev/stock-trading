@@ -9,7 +9,7 @@ import site.stocktrading.api.stock.domain.Stock;
 public class Order {
 	private final Stock stock;
 	private final int quantity;
-	private final LocalDateTime tradeTime;
+	private final LocalDateTime time;
 	private final Type type;
 
 	private enum Type {
@@ -17,10 +17,10 @@ public class Order {
 		SELL
 	}
 
-	private Order(Stock stock, int quantity, LocalDateTime tradeTime, Type type) {
+	private Order(Stock stock, int quantity, LocalDateTime time, Type type) {
 		this.stock = stock;
 		this.quantity = quantity;
-		this.tradeTime = tradeTime;
+		this.time = time;
 		this.type = type;
 
 		if (this.quantity <= 0) {
@@ -28,16 +28,16 @@ public class Order {
 		}
 	}
 
-	public static Order buy(Stock stock, int quantity, LocalDateTime tradeTime) {
-		return new Order(stock, quantity, tradeTime, Type.BUY);
+	public static Order buy(Stock stock, int quantity, LocalDateTime time) {
+		return new Order(stock, quantity, time, Type.BUY);
 	}
 
-	public static Order sell(Stock stock, int quantity, LocalDateTime tradeTime) {
-		return new Order(stock, quantity, tradeTime, Type.SELL);
+	public static Order sell(Stock stock, int quantity, LocalDateTime time) {
+		return new Order(stock, quantity, time, Type.SELL);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("(stock=%s, quantity=%s, tradeTime=%s)", stock, quantity, tradeTime);
+		return String.format("(stock=%s, quantity=%s, tradeTime=%s)", stock, quantity, time);
 	}
 }
