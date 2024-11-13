@@ -1,7 +1,5 @@
 package site.stocktrading.api.stock.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.assertj.core.api.Assertions;
@@ -11,9 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.springframework.test.context.ActiveProfiles;
 
-import site.stocktrading.api.stock.domain.Stock;
-
+@ActiveProfiles("test")
 class RangeRandomPercentageGeneratorTest {
 
 	private ThreadLocalRandom random;
@@ -28,11 +26,11 @@ class RangeRandomPercentageGeneratorTest {
 
 	@DisplayName("범위가 주어지고 범위를 기준으로한 랜덤 값 생성시 -(range+1)% ~ +(range+1)%의 값을 생성한다")
 	@Test
-	void givenRange_whenGenerate_thenRandomPercentage(){
-	    // given
+	void givenRange_whenGenerate_thenRandomPercentage() {
+		// given
 		BDDMockito.given(random.nextDouble()).willReturn(0.0);
 		BDDMockito.given(random.nextBoolean()).willReturn(true);
-	    // when
+		// when
 		double actual = generator.generate();
 		// then
 		Assertions.assertThat(actual).isCloseTo(0.01, Percentage.withPercentage(0));

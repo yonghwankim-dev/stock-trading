@@ -4,8 +4,8 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
 public class Trade {
-	private Order buyOrder;
-	private Order sellOrder;
+	private final Order buyOrder;
+	private final Order sellOrder;
 
 	public Trade(Order buyOrder, Order sellOrder) {
 		this.buyOrder = buyOrder;
