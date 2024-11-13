@@ -37,8 +37,7 @@ public class Market {
 		Account seller = new Account(2L);
 		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
 		Order sellOrder = Order.sell(seller, samsung, 7, sellOrderTime);
-
-		int filledQuantity = 5;
-		return new Trade(buyOrder, sellOrder, filledQuantity);
+		
+		return Trade.filled(buyOrder, sellOrder);
 	}
 }

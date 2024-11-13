@@ -57,7 +57,7 @@ public class TradeService {
 				throw new OrderException("Sell Operation Failed", throwable);
 			});
 
-		return buyFuture.thenCombine(sellFuture, (buy, sell) -> new Trade(buy, sell, quantity))
+		return buyFuture.thenCombine(sellFuture, Trade::filled)
 			.exceptionally(throwable -> {
 				throw new TradeException("Trade failed due to an operation failure", throwable);
 			});
