@@ -1,8 +1,10 @@
 package site.stocktrading.api.broker.domain;
 
-import java.time.LocalDateTime;
+import static org.assertj.core.api.Assertions.*;
 
-import org.assertj.core.api.Assertions;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,9 +44,26 @@ class MarketTest {
 		market.acceptOrder(buyOrder);
 		market.acceptOrder(sellOrder);
 		// when
-		Trade actual = market.attemptTrade();
+		Optional<Trade> actual = market.attemptTrade();
 		// then
 		Trade expected = Trade.filled(buyOrder, sellOrder);
-		Assertions.assertThat(actual).isEqualTo(expected);
+		assertThat(actual).isPresent();
+		assertThat(actual.get()).isEqualTo(expected);
+	}
+
+	@DisplayName("매수 주문만 존재하고 매도 주문이 없다면 거래를 체결되지 않는다")
+	@Test
+	void givenOnlyBuyOrders_whenAttemptTrade_thenNotTrade() {
+		// given
+		Account buyer = new Account(1L);
+		Stock samsung = new Stock("삼성전자보통주", 50000);
+		LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
+		Order buyOrder = Order.buy(buyer, samsung, 5, buyOrderTime);
+
+		market.acceptOrder(buyOrder);
+		// when
+		Optional<Trade> actual = market.attemptTrade();
+		// then
+		assertThat(actual).isEmpty();
 	}
 }
