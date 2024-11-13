@@ -2,10 +2,12 @@ package site.stocktrading.api.trade.service;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
 import site.stocktrading.api.trade.domain.Trade;
@@ -14,6 +16,7 @@ import site.stocktrading.global.util.time.TimeService;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TradeService {
 
 	private final DelayService delayService;
@@ -21,6 +24,7 @@ public class TradeService {
 
 	public CompletableFuture<Order> buyStock(Stock stock, int quantity) {
 		return CompletableFuture.supplyAsync(() -> {
+			log.info("buyStock: stock={}, quantity={}", stock, quantity);
 			// 비즈니스 로직: 예시로 1초~3초 랜덤 지연
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
@@ -31,6 +35,7 @@ public class TradeService {
 
 	public CompletableFuture<Order> sellStock(Stock stock, int quantity) {
 		return CompletableFuture.supplyAsync(() -> {
+			log.info("sellStock: stock={}, quantity={}", stock, quantity);
 			// 비즈니스 로직: 예시로 1초~3초 지연
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
@@ -49,8 +54,11 @@ public class TradeService {
 				Order buyOrder = buyFuture.get();
 				Order sellOrder = sellFuture.get();
 				return new Trade(buyOrder, sellOrder);
-			} catch (Exception e) {
+			} catch (ExecutionException e) {
 				throw new TradeException("fail trade", e);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new TradeException("Trade interrupted", e);
 			}
 		});
 	}

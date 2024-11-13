@@ -88,4 +88,19 @@ class TradeServiceTest {
 		Trade expected = new Trade(Order.buy(samsung, 10, tradeTime), Order.sell(samsung, 10, tradeTime));
 		Assertions.assertThat(actual).isEqualTo(expected);
 	}
+
+	@DisplayName("매수, 매도 주문이 주어지고 주문 개수가 0개인 경우 거래를 체결되지 않는다")
+	@Test
+	void givenOrders_whenProcessOrdersWithZeroQuantity_thenNotTrade() {
+		// given
+		Stock samsung = new Stock("samsung", 50000);
+		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
+		BDDMockito.given(timeService.now()).willReturn(tradeTime);
+		// when
+		Throwable throwable = Assertions.catchThrowable(() -> service.processOrders(samsung, 0));
+		// then
+		Assertions.assertThat(throwable)
+			.isInstanceOf(CompletionException.class)
+			.hasMessage("java.lang.IllegalArgumentException: Quantity can not be negative, quantity=0");
+	}
 }
