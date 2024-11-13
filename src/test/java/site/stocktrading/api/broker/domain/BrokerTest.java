@@ -18,10 +18,10 @@ class BrokerTest {
 		// given
 		Account account = new Account(1L);
 		Broker broker = new Broker();
-		// when
-		Order order = broker.orderBuyStock(account);
-		// then
 		Stock samsung = new Stock("삼성전자보통주", 50000);
+		// when
+		Order order = broker.orderBuyStock(account, samsung);
+		// then
 		int quantity = 5;
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
 		Order expected = Order.buy(account, samsung, quantity, tradeTime);
