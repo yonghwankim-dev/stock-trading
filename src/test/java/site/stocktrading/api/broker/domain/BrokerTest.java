@@ -36,11 +36,28 @@ class BrokerTest {
 		given(timeService.now()).willReturn(orderTime);
 
 		// when
-		Order order = broker.orderBuyStock(account, samsung, quantity);
+		Order actual = broker.orderBuyStock(account, samsung, quantity);
 
 		// then
 		Order expected = Order.buy(account, samsung, quantity, orderTime);
-		Assertions.assertThat(order).isEqualTo(expected);
+		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 
+	@DisplayName("브로커에게 종목을 매도 주문한다")
+	@Test
+	void orderSellStock() {
+		// given
+		Account account = new Account(1L);
+		Broker broker = new Broker(timeService);
+		Stock samsung = new Stock("삼성전자보통주", 50000);
+		int quantity = 5;
+		LocalDateTime orderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
+		given(timeService.now()).willReturn(orderTime);
+
+		// when
+		Order actual = broker.orderSellStock(account, samsung, quantity);
+		// then
+		Order expected = Order.sell(account, samsung, quantity, orderTime);
+		Assertions.assertThat(actual).isEqualTo(expected);
+	}
 }
