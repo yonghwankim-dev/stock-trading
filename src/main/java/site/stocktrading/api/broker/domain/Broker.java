@@ -9,9 +9,11 @@ import site.stocktrading.global.util.time.TimeService;
 
 public class Broker {
 
+	private final Market market;
 	private final TimeService timeService;
 
-	public Broker(TimeService timeService) {
+	public Broker(Market market, TimeService timeService) {
+		this.market = market;
 		this.timeService = timeService;
 	}
 

@@ -18,10 +18,13 @@ import site.stocktrading.global.util.time.TimeService;
 class BrokerTest {
 
 	private TimeService timeService;
+	private Broker broker;
 
 	@BeforeEach
 	void setUp() {
 		timeService = Mockito.mock(TimeService.class);
+		Market market = new Market();
+		broker = new Broker(market, timeService);
 	}
 
 	@DisplayName("브로커에게서 종목을 매수 주문한다")
@@ -29,7 +32,6 @@ class BrokerTest {
 	void orderBuyStock() {
 		// given
 		Account account = new Account(1L);
-		Broker broker = new Broker(timeService);
 		Stock samsung = new Stock("삼성전자보통주", 50000);
 		int quantity = 5;
 		LocalDateTime orderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
@@ -48,7 +50,6 @@ class BrokerTest {
 	void orderSellStock() {
 		// given
 		Account account = new Account(1L);
-		Broker broker = new Broker(timeService);
 		Stock samsung = new Stock("삼성전자보통주", 50000);
 		int quantity = 5;
 		LocalDateTime orderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
