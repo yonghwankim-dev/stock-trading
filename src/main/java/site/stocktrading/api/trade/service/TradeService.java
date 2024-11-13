@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.stocktrading.api.account.domain.Account;
 import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
 import site.stocktrading.api.trade.domain.Trade;
@@ -30,7 +31,7 @@ public class TradeService {
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
-			return Order.buy(stock, quantity, tradeTime);
+			return Order.buy(new Account(1L), stock, quantity, tradeTime);
 		});
 	}
 
@@ -41,7 +42,7 @@ public class TradeService {
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
-			return Order.sell(stock, quantity, tradeTime);
+			return Order.sell(new Account(1L), stock, quantity, tradeTime);
 		});
 	}
 

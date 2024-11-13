@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import site.stocktrading.api.account.domain.Account;
 import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
 
@@ -22,7 +23,7 @@ class BrokerTest {
 		Stock samsung = new Stock("삼성전자보통주", 50000);
 		int quantity = 5;
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-		Order expected = Order.buy(samsung, quantity, tradeTime);
+		Order expected = Order.buy(new Account(1L), samsung, quantity, tradeTime);
 		Assertions.assertThat(order).isEqualTo(expected);
 	}
 

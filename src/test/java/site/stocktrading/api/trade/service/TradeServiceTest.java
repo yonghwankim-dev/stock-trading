@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import site.stocktrading.api.account.domain.Account;
 import site.stocktrading.api.stock.domain.Stock;
 import site.stocktrading.api.trade.domain.Order;
 import site.stocktrading.api.trade.domain.Trade;
@@ -57,7 +58,7 @@ class TradeServiceTest {
 
 		// then
 		Order actual = future.join();
-		Order expected = Order.buy(samsung, quantity, tradeTime);
+		Order expected = Order.buy(new Account(1L), samsung, quantity, tradeTime);
 		assertThat(actual).isEqualTo(expected);
 	}
 
@@ -92,7 +93,8 @@ class TradeServiceTest {
 		Trade actual = service.processOrders(samsung, 10).join();
 
 		// then
-		Trade expected = new Trade(Order.buy(samsung, 10, tradeTime), Order.sell(samsung, 10, tradeTime));
+		Trade expected = new Trade(Order.buy(new Account(1L), samsung, 10, tradeTime),
+			Order.sell(new Account(1L), samsung, 10, tradeTime));
 		assertThat(actual).isEqualTo(expected);
 	}
 
