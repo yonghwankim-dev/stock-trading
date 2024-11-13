@@ -1,10 +1,10 @@
 package site.stocktrading.api.broker.domain;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDateTime;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class BrokerTest {
 
 		// then
 		Order expected = Order.buy(account, samsung, quantity, orderTime);
-		Assertions.assertThat(actual).isEqualTo(expected);
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@DisplayName("브로커에게 종목을 매도 주문한다")
@@ -59,6 +59,6 @@ class BrokerTest {
 		Order actual = broker.orderSellStock(account, samsung, quantity);
 		// then
 		Order expected = Order.sell(account, samsung, quantity, orderTime);
-		Assertions.assertThat(actual).isEqualTo(expected);
+		assertThat(actual).isEqualTo(expected);
 	}
 }

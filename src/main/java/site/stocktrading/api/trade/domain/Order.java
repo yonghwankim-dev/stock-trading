@@ -14,7 +14,7 @@ public class Order {
 	private final LocalDateTime time;
 	private final Type type;
 
-	private enum Type {
+	public enum Type {
 		BUY,
 		SELL
 	}
@@ -37,6 +37,10 @@ public class Order {
 
 	public static Order sell(Account account, Stock stock, int quantity, LocalDateTime time) {
 		return new Order(account, stock, quantity, time, Type.SELL);
+	}
+
+	public boolean isTypeOf(Type type) {
+		return this.type == type;
 	}
 
 	@Override
