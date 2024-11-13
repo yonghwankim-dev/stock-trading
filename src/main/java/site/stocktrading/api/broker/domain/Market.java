@@ -30,23 +30,20 @@ public class Market {
 	 * 거래 체결 조건
 	 * - 매수, 매도 주문이 존재해야 한다
 	 * - 거래 체결시 매수, 매도 주문의 종목이 동일해야 한다
-	 * - 매수 주문 수량이 매도 주문 수량보다 이하여야 한다
 	 * - 거래 체결시 하나의 매수 주문과 2개 이상의 매도 주문이 존재하는 경우 주문 시간이 빠른 순서대로 체결된다
+	 * @return Optional<Trade> 체결된 거래
 	 */
 	public Optional<Trade> attemptTrade() {
 
-		Order buyOrder = pollOrder(Queue::poll, buyOrders);
-		if (buyOrder == null) {
+		Optional<Order> buyOrder = pollOrder().apply(buyOrders);
+		if (buyOrder.isEmpty()) {
 			return Optional.empty();
 		}
-		Order sellOrder = pollOrder(Queue::poll, sellOrders);
-		if (sellOrder == null) {
-			return Optional.empty();
-		}
-		return Optional.of(Trade.filled(buyOrder, sellOrder));
+		Optional<Order> sellOrder = pollOrder().apply(sellOrders);
+		return sellOrder.map(order -> Trade.filled(buyOrder.get(), order));
 	}
 
-	private Order pollOrder(Function<Queue<Order>, Order> function, Queue<Order> orderQueue) {
-		return function.apply(orderQueue);
+	private Function<Queue<Order>, Optional<Order>> pollOrder() {
+		return queue -> Optional.ofNullable(queue.poll());
 	}
 }
