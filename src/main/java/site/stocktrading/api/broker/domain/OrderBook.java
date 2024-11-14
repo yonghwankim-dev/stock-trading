@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -50,5 +51,18 @@ public class OrderBook {
 		List<Order> result = new ArrayList<>(sellOrders);
 		result.sort(sellOrdersComp);
 		return Collections.unmodifiableList(result);
+	}
+
+	public Optional<Order> getTopBuyOrder() {
+		return Optional.ofNullable(buyOrders.peek());
+	}
+
+	public Optional<Order> getTopSellOrder() {
+		return Optional.ofNullable(sellOrders.peek());
+	}
+
+	@Override
+	public String toString() {
+		return String.format("(stock=%s, buyOrders=%s, sellOrders=%s)", stock, buyOrders, sellOrders);
 	}
 }
