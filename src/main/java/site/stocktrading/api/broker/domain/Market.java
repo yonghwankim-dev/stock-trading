@@ -42,7 +42,7 @@ public class Market {
 			if (buyOrder.comparePrice(sellOrder) >= 0) {
 				Trade trade = Trade.filled(buyOrder, sellOrder);
 
-				// 체결된 수량만큼 주문 수량 감소
+				// 체결된 수량만큼 매수 주문 수량 감소
 				if (buyOrder.getQuantity() == trade.getQuantity()) {
 					orderBook.removeTopBuyOrder();
 				} else {
@@ -50,6 +50,7 @@ public class Market {
 					orderBook.addOrder(buyOrder.minusQuantity(trade.getQuantity()));
 				}
 
+				// 체결된 수량만큼 매도 주문 수량 감소
 				if (sellOrder.getQuantity() == trade.getQuantity()) {
 					orderBook.removeTopSellOrder();
 				} else {
@@ -62,5 +63,9 @@ public class Market {
 		}
 
 		return Optional.empty();
+	}
+
+	public Optional<OrderBook> getOrderBook(Stock stock) {
+		return Optional.ofNullable(orderBooks.get(stock));
 	}
 }
