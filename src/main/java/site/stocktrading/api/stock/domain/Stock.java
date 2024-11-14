@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import site.stocktrading.api.stock.service.RandomPercentageGenerator;
 import site.stocktrading.api.stock.service.RandomPriceGenerator;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "name")
 public class Stock {
 	@JsonProperty("name")
 	private final String name;
