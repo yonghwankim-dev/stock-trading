@@ -62,7 +62,7 @@ class MarketTest {
 		return Stream.of(
 			dynamicTest("매도 주문을 접수한다", () -> {
 				// given
-				Account seller = new Account(2L);
+				Account seller = new Account(1L);
 				int quantity = 7;
 				int sellPrice = 50000;
 				LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
@@ -84,16 +84,16 @@ class MarketTest {
 			}),
 			dynamicTest("매수 주문을 접수한다", () -> {
 				// given
-				Account seller = new Account(2L);
+				Account buyer = new Account(2L);
 				int quantity = 5;
 				int buyPrice = 50000;
 				LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-				Order buyOrder = Order.buy(seller, samsung, quantity, buyPrice, buyOrderTime);
+				Order buyOrder = Order.buy(buyer, samsung, quantity, buyPrice, buyOrderTime);
 
 				quantity = 4;
 				buyPrice = 40000;
 				buyOrderTime = buyOrderTime.plusMinutes(10);
-				Order buyOrder2 = Order.buy(seller, samsung, quantity, buyPrice, buyOrderTime);
+				Order buyOrder2 = Order.buy(buyer, samsung, quantity, buyPrice, buyOrderTime);
 				// when
 				market.acceptOrder(buyOrder);
 				market.acceptOrder(buyOrder2);
@@ -105,7 +105,24 @@ class MarketTest {
 					.containsExactly(buyOrder, buyOrder2);
 			}),
 			dynamicTest("거래를 체결한다", () -> {
+				// given
+				// when
+				Optional<Trade> trade = market.attemptTrade(samsung);
+				// then
+				Account buyer = new Account(2L);
+				int buyQuantity = 5;
+				int buyPrice = 50000;
+				LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
+				Order buyOrder = Order.buy(buyer, samsung, buyQuantity, buyPrice, buyOrderTime);
 
+				Account seller = new Account(1L);
+				int sellQuantity = 7;
+				int sellPrice = 50000;
+				LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
+				Order sellOrder = Order.sell(seller, samsung, sellQuantity, sellPrice, sellOrderTime);
+
+				Trade expected = Trade.filled(buyOrder, sellOrder);
+				Assertions.assertThat(trade).contains(expected);
 			})
 		);
 	}
