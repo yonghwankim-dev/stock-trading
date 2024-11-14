@@ -53,7 +53,7 @@ class MarketTest {
 		assertThat(actual).contains(expected);
 	}
 
-	@DisplayName("매수, 매도 주문의 거래 체결 시나리오")
+	@DisplayName("매수, 매도 주문후 거래 체결 시나리오")
 	@TestFactory
 	Stream<DynamicTest> acceptOrderAndAttemptTrade() {
 		int currentPrice = 50000;
