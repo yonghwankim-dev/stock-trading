@@ -137,11 +137,7 @@ public class Order {
 	public int compareTime(Order order) {
 		return this.time.compareTo(order.time);
 	}
-
-	public int getPrice() {
-		return price;
-	}
-
+	
 	@Override
 	public String toString() {
 		return String.format("(account=%s, stock=%s, quantity=%d, price=%d, orderTime=%s)", account, stock, quantity,
