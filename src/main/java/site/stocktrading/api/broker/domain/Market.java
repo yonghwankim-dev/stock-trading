@@ -38,23 +38,21 @@ public class Market {
 		if (topBuyOrder.isPresent() && topSellOrder.isPresent()) {
 			Order buyOrder = topBuyOrder.get();
 			Order sellOrder = topSellOrder.get();
+			Trade trade = Trade.filled(buyOrder, sellOrder);
 
-			if (buyOrder.comparePrice(sellOrder) >= 0) {
-				Trade trade = Trade.filled(buyOrder, sellOrder);
-
-				// 체결된 수량만큼 매수 주문 수량 감소
+			// Full Execution (완전 체결)
+			if (buyOrder.isFullExecution(sellOrder)) {
 				orderBook.removeTopBuyOrder();
-				if (!buyOrder.isFulfilled(trade)) {
-					buyOrder.fulfill(trade).ifPresent(orderBook::addOrder);
-				}
-
-				// 체결된 수량만큼 매도 주문 수량 감소
 				orderBook.removeTopSellOrder();
-				if (!sellOrder.isFulfilled(trade)) {
-					sellOrder.fulfill(trade).ifPresent(orderBook::addOrder);
-				}
-
-				return Optional.of(Trade.filled(buyOrder, sellOrder));
+				return Optional.of(trade);
+			}
+			// Fill (체결)
+			else if (buyOrder.canBuy(sellOrder) && buyOrder.compareQuantity(sellOrder) <= 0) {
+				orderBook.removeTopBuyOrder();
+				orderBook.removeTopSellOrder();
+				buyOrder.fulfill(trade).ifPresent(orderBook::addOrder);
+				sellOrder.fulfill(trade).ifPresent(orderBook::addOrder);
+				return Optional.of(trade);
 			}
 		}
 

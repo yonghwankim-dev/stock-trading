@@ -34,6 +34,19 @@ public class Order {
 		return new Conclusion(filledQuantity, this.price);
 	}
 
+	/**
+	 * 매개변수로 받은 주문을 매수할 수 있는지 여부
+	 * - 가격(this.price)이 매도 주문의 가격보다 이상인 경우 true 반환
+	 * @param sellOrder 매도 주문
+	 * @return the boolean
+	 */
+	public boolean canBuy(Order sellOrder) {
+		if (this.type == Type.BUY && sellOrder.type == Type.SELL) {
+			return this.comparePrice(sellOrder) >= 0;
+		}
+		return false;
+	}
+
 	public enum Type {
 		BUY,
 		SELL;
@@ -97,14 +110,20 @@ public class Order {
 	 * @return 체결하고 남은 주문 수량을 가진 주문(Order)
 	 */
 	public Optional<Order> fulfill(Trade trade) {
-		if (this.isFulfilled(trade)) {
+		if (this.compareQuantity(trade) == 0) {
 			return Optional.empty();
 		}
 		return Optional.of(this.minusQuantity(trade));
 	}
 
-	public boolean isFulfilled(Trade trade) {
-		return this.compareQuantity(trade) == 0;
+	/**
+	 * 두 주문이 완전 체결인지 확인
+	 *
+	 * @param order the order
+	 * @return the boolean
+	 */
+	public boolean isFullExecution(Order order) {
+		return this.canBuy(order) && compareQuantity(order) == 0;
 	}
 
 	/**
@@ -126,6 +145,10 @@ public class Order {
 		return of(account, stock, minusQuantity, price, time, type);
 	}
 
+	public int compareQuantity(Order order) {
+		return Integer.compare(this.quantity, order.quantity);
+	}
+
 	private int compareQuantity(Trade trade) {
 		return trade.compareQuantity(this.quantity);
 	}
@@ -137,7 +160,7 @@ public class Order {
 	public int compareTime(Order order) {
 		return this.time.compareTo(order.time);
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("(account=%s, stock=%s, quantity=%d, price=%d, orderTime=%s)", account, stock, quantity,
