@@ -2,6 +2,7 @@ package site.stocktrading.api.trade.domain;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.lang.NonNull;
 
@@ -78,6 +79,23 @@ public class Order {
 	}
 
 	/**
+	 * 거래를 체결하고 남은 주문을 반환
+	 *
+	 * @param trade the trade
+	 * @return 체결하고 남은 주문 수량을 가진 주문(Order)
+	 */
+	public Optional<Order> fulfill(Trade trade) {
+		if (this.isFulfilled(trade)) {
+			return Optional.empty();
+		}
+		return Optional.of(this.minusQuantity(trade.getQuantity()));
+	}
+
+	public boolean isFulfilled(Trade trade) {
+		return this.compareQuantity(trade) == 0;
+	}
+
+	/**
 	 * 체결 주문 수량을 계산
 	 *
 	 * @param order 매수 주문
@@ -94,6 +112,10 @@ public class Order {
 	public Order minusQuantity(int quantity) {
 		int minusQuantity = this.quantity - quantity;
 		return of(account, stock, minusQuantity, price, time, type);
+	}
+
+	private int compareQuantity(Trade trade) {
+		return Integer.compare(this.quantity, trade.getQuantity());
 	}
 
 	public int comparePrice(Order order) {

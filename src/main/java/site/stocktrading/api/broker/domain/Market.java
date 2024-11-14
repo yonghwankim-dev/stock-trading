@@ -43,19 +43,15 @@ public class Market {
 				Trade trade = Trade.filled(buyOrder, sellOrder);
 
 				// 체결된 수량만큼 매수 주문 수량 감소
-				if (buyOrder.getQuantity() == trade.getQuantity()) {
-					orderBook.removeTopBuyOrder();
-				} else {
-					orderBook.removeTopBuyOrder();
-					orderBook.addOrder(buyOrder.minusQuantity(trade.getQuantity()));
+				orderBook.removeTopBuyOrder();
+				if (!buyOrder.isFulfilled(trade)) {
+					buyOrder.fulfill(trade).ifPresent(orderBook::addOrder);
 				}
 
 				// 체결된 수량만큼 매도 주문 수량 감소
-				if (sellOrder.getQuantity() == trade.getQuantity()) {
-					orderBook.removeTopSellOrder();
-				} else {
-					orderBook.removeTopSellOrder();
-					orderBook.addOrder(sellOrder.minusQuantity(trade.getQuantity()));
+				orderBook.removeTopSellOrder();
+				if (!sellOrder.isFulfilled(trade)) {
+					sellOrder.fulfill(trade).ifPresent(orderBook::addOrder);
 				}
 
 				return Optional.of(Trade.filled(buyOrder, sellOrder));
