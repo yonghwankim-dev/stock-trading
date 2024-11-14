@@ -1,6 +1,7 @@
 package site.stocktrading.api.trade.domain;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.lang.NonNull;
 
@@ -8,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import site.stocktrading.api.account.domain.Account;
+import site.stocktrading.api.broker.domain.OrderBook;
 import site.stocktrading.api.stock.domain.Stock;
 
 @EqualsAndHashCode
@@ -64,6 +66,10 @@ public class Order {
 			.build();
 	}
 
+	public void acceptOrderBy(Map<Stock, OrderBook> orderBooks) {
+		orderBooks.computeIfAbsent(stock, OrderBook::new).addOrder(this);
+	}
+
 	/**
 	 * 체결 주문 수량을 계산
 	 *
@@ -84,6 +90,10 @@ public class Order {
 
 	public int compareTime(Order order) {
 		return this.time.compareTo(order.time);
+	}
+
+	public int getPrice() {
+		return price;
 	}
 
 	@Override
