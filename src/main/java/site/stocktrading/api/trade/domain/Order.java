@@ -100,7 +100,7 @@ public class Order {
 		if (this.isFulfilled(trade)) {
 			return Optional.empty();
 		}
-		return Optional.of(this.minusQuantity(trade.getQuantity()));
+		return Optional.of(this.minusQuantity(trade));
 	}
 
 	public boolean isFulfilled(Trade trade) {
@@ -121,13 +121,13 @@ public class Order {
 		return this.type == Type.BUY;
 	}
 
-	public Order minusQuantity(int quantity) {
-		int minusQuantity = this.quantity - quantity;
+	public Order minusQuantity(Trade trade) {
+		int minusQuantity = trade.minusQuantity(this.quantity);
 		return of(account, stock, minusQuantity, price, time, type);
 	}
 
 	private int compareQuantity(Trade trade) {
-		return Integer.compare(this.quantity, trade.getQuantity());
+		return trade.compareQuantity(this.quantity);
 	}
 
 	public int comparePrice(Order order) {

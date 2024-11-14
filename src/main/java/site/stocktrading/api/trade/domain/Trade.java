@@ -19,8 +19,12 @@ public class Trade {
 		return new Trade(buyOrder, sellOrder, conclusion);
 	}
 
-	public int getQuantity() {
-		return conclusion.getQuantity();
+	public int minusQuantity(int quantity) {
+		return conclusion.minusQuantity(quantity);
+	}
+
+	public int compareQuantity(int quantity) {
+		return conclusion.compareQuantity(quantity);
 	}
 
 	@Override

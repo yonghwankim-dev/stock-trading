@@ -11,8 +11,12 @@ public class Conclusion {
 		this.quantity = quantity;
 		this.price = price;
 	}
+	
+	public int minusQuantity(int quantity) {
+		return quantity - this.quantity;
+	}
 
-	public int getQuantity() {
-		return quantity;
+	public int compareQuantity(int quantity) {
+		return Integer.compare(quantity, this.quantity);
 	}
 }
