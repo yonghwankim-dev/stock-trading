@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -59,70 +59,79 @@ class MarketTest {
 		int currentPrice = 50000;
 		Stock samsung = new Stock("삼성전자보통주", currentPrice);
 
+		Account seller = new Account(1L);
+		int sellQuantity = 7;
+		int sellPrice = 50000;
+		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
+		Order sellOrder = Order.sell(seller, samsung, sellQuantity, sellPrice, sellOrderTime);
+
+		sellQuantity = 6;
+		sellPrice = 51000;
+		sellOrderTime = sellOrderTime.minusHours(1);
+		Order sellOrder2 = Order.sell(seller, samsung, sellQuantity, sellPrice, sellOrderTime);
+
+		Account buyer = new Account(2L);
+		int buyQuantity = 5;
+		int buyPrice = 50000;
+		LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
+		Order buyOrder = Order.buy(buyer, samsung, buyQuantity, buyPrice, buyOrderTime);
+
+		buyQuantity = 4;
+		buyPrice = 40000;
+		buyOrderTime = buyOrderTime.plusMinutes(10);
+		Order buyOrder2 = Order.buy(buyer, samsung, buyQuantity, buyPrice, buyOrderTime);
+
 		return Stream.of(
 			dynamicTest("매도 주문을 접수한다", () -> {
 				// given
-				Account seller = new Account(1L);
-				int quantity = 7;
-				int sellPrice = 50000;
-				LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
-				Order sellOrder = Order.sell(seller, samsung, quantity, sellPrice, sellOrderTime);
 
-				quantity = 6;
-				sellPrice = 51000;
-				sellOrderTime = sellOrderTime.minusHours(1);
-				Order sellOrder2 = Order.sell(seller, samsung, quantity, sellPrice, sellOrderTime);
 				// when
 				market.acceptOrder(sellOrder);
 				market.acceptOrder(sellOrder2);
 				// then
-				Optional<OrderBook> orderBookOpt = market.getOrderBook(samsung);
-				Assertions.assertThat(orderBookOpt).isPresent();
-				Assertions.assertThat(orderBookOpt.get().findSellOrders())
+				OrderBook actualOrderBook = market.getOrderBook(samsung).orElseThrow();
+				List<Order> actualSellOrders = actualOrderBook.findSellOrders();
+				assertThat(actualSellOrders)
 					.hasSize(2)
 					.containsExactly(sellOrder, sellOrder2);
 			}),
 			dynamicTest("매수 주문을 접수한다", () -> {
 				// given
-				Account buyer = new Account(2L);
-				int quantity = 5;
-				int buyPrice = 50000;
-				LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-				Order buyOrder = Order.buy(buyer, samsung, quantity, buyPrice, buyOrderTime);
 
-				quantity = 4;
-				buyPrice = 40000;
-				buyOrderTime = buyOrderTime.plusMinutes(10);
-				Order buyOrder2 = Order.buy(buyer, samsung, quantity, buyPrice, buyOrderTime);
 				// when
 				market.acceptOrder(buyOrder);
 				market.acceptOrder(buyOrder2);
 				// then
-				Optional<OrderBook> orderBookOpt = market.getOrderBook(samsung);
-				Assertions.assertThat(orderBookOpt).isPresent();
-				Assertions.assertThat(orderBookOpt.get().findBuyOrders())
+				OrderBook actualOrderBook = market.getOrderBook(samsung).orElseThrow();
+				List<Order> actualBuyOrders = actualOrderBook.findBuyOrders();
+				assertThat(actualBuyOrders)
 					.hasSize(2)
 					.containsExactly(buyOrder, buyOrder2);
 			}),
 			dynamicTest("거래를 체결한다", () -> {
 				// given
+
 				// when
 				Optional<Trade> trade = market.attemptTrade(samsung);
 				// then
-				Account buyer = new Account(2L);
-				int buyQuantity = 5;
-				int buyPrice = 50000;
-				LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-				Order buyOrder = Order.buy(buyer, samsung, buyQuantity, buyPrice, buyOrderTime);
-
-				Account seller = new Account(1L);
-				int sellQuantity = 7;
-				int sellPrice = 50000;
-				LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
-				Order sellOrder = Order.sell(seller, samsung, sellQuantity, sellPrice, sellOrderTime);
-
 				Trade expected = Trade.filled(buyOrder, sellOrder);
-				Assertions.assertThat(trade).contains(expected);
+				assertThat(trade)
+					.as("Verify returned trade")
+					.contains(expected);
+				OrderBook actualOrderBook = market.getOrderBook(samsung).orElseThrow();
+				List<Order> actualBuyOrders = actualOrderBook.findBuyOrders();
+				assertThat(actualBuyOrders)
+					.as("Verify remained BuyOrders")
+					.hasSize(1)
+					.containsExactly(buyOrder2);
+
+				List<Order> actualSellOrders = actualOrderBook.findSellOrders();
+				LocalDateTime expectedOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
+				Order expectedSellOrder = Order.sell(seller, samsung, 2, 50000, expectedOrderTime);
+				assertThat(actualSellOrders)
+					.as("Verify remained SellOrders")
+					.hasSize(2)
+					.containsExactly(expectedSellOrder, sellOrder2);
 			})
 		);
 	}
