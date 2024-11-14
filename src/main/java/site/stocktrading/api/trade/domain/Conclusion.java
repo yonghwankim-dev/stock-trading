@@ -11,4 +11,8 @@ public class Conclusion {
 		this.quantity = quantity;
 		this.price = price;
 	}
+
+	public int getQuantity() {
+		return quantity;
+	}
 }
