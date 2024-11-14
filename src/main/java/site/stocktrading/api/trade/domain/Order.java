@@ -2,6 +2,10 @@ package site.stocktrading.api.trade.domain;
 
 import java.time.LocalDateTime;
 
+import org.springframework.lang.NonNull;
+
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import site.stocktrading.api.account.domain.Account;
 import site.stocktrading.api.stock.domain.Stock;
@@ -17,11 +21,12 @@ public class Order {
 
 	public enum Type {
 		BUY,
-		SELL;
-
+		SELL
 	}
 
-	private Order(Account account, Stock stock, int quantity, int price, LocalDateTime time, Type type) {
+	@Builder(access = AccessLevel.PRIVATE)
+	private Order(@NonNull Account account, @NonNull Stock stock, int quantity, int price, @NonNull LocalDateTime time,
+		@NonNull Type type) {
 		this.account = account;
 		this.stock = stock;
 		this.quantity = quantity;
@@ -30,16 +35,33 @@ public class Order {
 		this.type = type;
 
 		if (this.quantity <= 0) {
-			throw new IllegalArgumentException("Quantity can not be negative, quantity=" + quantity);
+			throw new IllegalArgumentException("Quantity must be positive, quantity=" + quantity);
+		}
+		if (this.price <= 0) {
+			throw new IllegalArgumentException("Price must be negative, price=" + price);
 		}
 	}
 
 	public static Order buy(Account account, Stock stock, int quantity, int price, LocalDateTime time) {
-		return new Order(account, stock, quantity, price, time, Type.BUY);
+		return Order.builder()
+			.account(account)
+			.stock(stock)
+			.quantity(quantity)
+			.price(price)
+			.time(time)
+			.type(Type.BUY)
+			.build();
 	}
 
 	public static Order sell(Account account, Stock stock, int quantity, int price, LocalDateTime time) {
-		return new Order(account, stock, quantity, price, time, Type.SELL);
+		return Order.builder()
+			.account(account)
+			.stock(stock)
+			.quantity(quantity)
+			.price(price)
+			.time(time)
+			.type(Type.SELL)
+			.build();
 	}
 
 	/**
@@ -58,10 +80,6 @@ public class Order {
 
 	public int compareTime(Order order) {
 		return time.compareTo(order.time);
-	}
-
-	public boolean equalStock(Order order) {
-		return this.stock.equals(order.stock);
 	}
 
 	@Override
