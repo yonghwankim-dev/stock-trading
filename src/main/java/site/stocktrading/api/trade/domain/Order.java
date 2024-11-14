@@ -88,6 +88,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return String.format("(account=%s, stock=%s, quantity=%s, tradeTime=%s)", account, stock, quantity, time);
+		return String.format("(account=%s, stock=%s, quantity=%d, price=%d, orderTime=%s)", account, stock, quantity,
+			price, time);
 	}
 }

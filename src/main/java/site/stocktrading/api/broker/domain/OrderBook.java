@@ -1,6 +1,7 @@
 package site.stocktrading.api.broker.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -15,17 +16,15 @@ public class OrderBook {
 
 	static {
 		Comparator<Order> comparePrice = Order::comparePrice;
-		comparePrice.reversed().thenComparing(Order::compareTime);
-		buyOrdersComp = comparePrice;
+		buyOrdersComp = comparePrice.reversed().thenComparing(Order::compareTime);
 
 		comparePrice = Order::comparePrice;
-		comparePrice.thenComparing(Order::compareTime);
-		sellOrdersComp = comparePrice;
+		sellOrdersComp = comparePrice.thenComparing(Order::compareTime);
 	}
 
 	private final Stock stock;
-	private final Queue<Order> buyOrders; // 높은 가격-주문 시간 우선
-	private final Queue<Order> sellOrders; // 낮은 가격-주문 시간 우선
+	private final Queue<Order> buyOrders; // 가격 내림차순-주문 시간 오름차순 정렬
+	private final Queue<Order> sellOrders; // 가격 오름차순-주문 시간 오름차순 정렬
 
 	public OrderBook(Stock stock) {
 		this.stock = stock;
@@ -42,6 +41,14 @@ public class OrderBook {
 	}
 
 	public List<Order> findBuyOrders() {
-		return new ArrayList<>(buyOrders);
+		List<Order> result = new ArrayList<>(buyOrders);
+		result.sort(buyOrdersComp);
+		return Collections.unmodifiableList(result);
+	}
+
+	public List<Order> findSellOrders() {
+		List<Order> result = new ArrayList<>(sellOrders);
+		result.sort(sellOrdersComp);
+		return Collections.unmodifiableList(result);
 	}
 }

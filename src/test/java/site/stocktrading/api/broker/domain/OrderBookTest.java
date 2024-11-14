@@ -1,9 +1,10 @@
 package site.stocktrading.api.broker.domain;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class OrderBookTest {
 		buyOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
 		Order sevenBuyOrder = Order.buy(buyer, samsung, 7, price, buyOrderTime);
 
+		buyOrderTime = LocalDateTime.of(2024, 11, 13, 10, 0, 0);
+		Order sevenBuyOrder2 = Order.buy(buyer, samsung, 7, price, buyOrderTime);
+
 		Account seller = new Account(2L);
 		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
 		price = 52000;
@@ -45,17 +49,25 @@ class OrderBookTest {
 		sellOrderTime = LocalDateTime.of(2024, 11, 13, 10, 0, 0);
 		Order fiveSellOrder = Order.sell(seller, samsung, 5, price, sellOrderTime);
 
+		sellOrderTime = LocalDateTime.of(2024, 11, 13, 9, 0, 0);
+		Order fiveSellOrder2 = Order.sell(seller, samsung, 5, price, sellOrderTime);
+
+		List<Order> orders = List.of(fiveBuyOrder, sevenBuyOrder, sevenBuyOrder2, sevenSellOrder, fiveSellOrder,
+			fiveSellOrder2);
 		// when
-		orderBook.addOrder(fiveBuyOrder);
-		orderBook.addOrder(sevenBuyOrder);
-		orderBook.addOrder(sevenSellOrder);
-		orderBook.addOrder(fiveSellOrder);
+		orders.forEach(orderBook::addOrder);
 
 		// then
 		// 가격 내림차순 - 시간 오름차순으로 정렬되었는지 확인
 		List<Order> buyOrders = orderBook.findBuyOrders();
-		Assertions.assertThat(buyOrders)
-			.hasSize(2);
+		assertThat(buyOrders)
+			.hasSize(3)
+			.containsExactly(sevenBuyOrder2, sevenBuyOrder, fiveBuyOrder);
+
+		List<Order> sellOrders = orderBook.findSellOrders();
+		assertThat(sellOrders)
+			.hasSize(3)
+			.containsExactly(sevenSellOrder, fiveSellOrder2, fiveSellOrder);
 	}
 
 }
