@@ -1,6 +1,8 @@
 package site.stocktrading.api.broker.domain;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -29,5 +31,17 @@ public class OrderBook {
 		this.stock = stock;
 		this.buyOrders = new PriorityQueue<>(buyOrdersComp);
 		this.sellOrders = new PriorityQueue<>(sellOrdersComp);
+	}
+
+	public void addOrder(Order order) {
+		if (order.isBuyOrder()) {
+			buyOrders.offer(order);
+		} else {
+			sellOrders.offer(order);
+		}
+	}
+
+	public List<Order> findBuyOrders() {
+		return new ArrayList<>(buyOrders);
 	}
 }
