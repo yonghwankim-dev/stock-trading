@@ -126,10 +126,6 @@ public class Order {
 		return this.time.compareTo(order.time);
 	}
 
-	public int getQuantity() {
-		return quantity;
-	}
-
 	public int getPrice() {
 		return price;
 	}
