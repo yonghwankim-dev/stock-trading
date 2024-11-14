@@ -22,6 +22,18 @@ public class Order {
 	private final LocalDateTime time;
 	private final Type type;
 
+	/**
+	 * 두 주문을 이용하여 체결 정보를 생성하여 반환
+	 * - this는 매도 주문, 매개 변수의 order는 매수 주문이어야 한다
+	 * - 체결 가격은 매도 주문의 가격(this.price) 기준으로 한다
+	 * @param order the order
+	 * @return the conclusion
+	 */
+	public Conclusion createConclusion(Order order) {
+		int filledQuantity = calFilledQuantity(order);
+		return new Conclusion(filledQuantity, this.price);
+	}
+
 	public enum Type {
 		BUY,
 		SELL;

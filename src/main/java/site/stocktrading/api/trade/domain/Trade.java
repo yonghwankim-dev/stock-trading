@@ -15,9 +15,7 @@ public class Trade {
 	}
 
 	public static Trade filled(Order buyOrder, Order sellOrder) {
-		int quantity = sellOrder.calFilledQuantity(buyOrder);
-		int price = sellOrder.getPrice(); // 매도 주문에 맞추어 가격 체결
-		Conclusion conclusion = new Conclusion(quantity, price);
+		Conclusion conclusion = sellOrder.createConclusion(buyOrder);
 		return new Trade(buyOrder, sellOrder, conclusion);
 	}
 
