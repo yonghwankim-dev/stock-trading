@@ -78,8 +78,12 @@ public class Order {
 		return this.type == Type.BUY;
 	}
 
+	public int comparePrice(Order order) {
+		return Integer.compare(this.price, order.price);
+	}
+
 	public int compareTime(Order order) {
-		return time.compareTo(order.time);
+		return this.time.compareTo(order.time);
 	}
 
 	@Override

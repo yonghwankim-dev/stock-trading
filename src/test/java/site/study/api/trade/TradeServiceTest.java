@@ -62,7 +62,7 @@ class TradeServiceTest {
 		Throwable throwable = catchThrowable(future::join);
 		assertThat(throwable)
 			.isInstanceOf(CompletionException.class)
-			.hasMessage("java.lang.IllegalArgumentException: Quantity can not be negative, quantity=0");
+			.hasMessage("java.lang.IllegalArgumentException: Quantity must be positive, quantity=0");
 	}
 
 	@DisplayName("종목과 수량이 주어지고 수량이 0인 경우에 예외를 처리하여 null을 반환")
