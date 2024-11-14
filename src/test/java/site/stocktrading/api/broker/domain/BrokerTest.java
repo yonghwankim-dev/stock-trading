@@ -32,16 +32,17 @@ class BrokerTest {
 	void orderBuyStock() {
 		// given
 		Account account = new Account(1L);
-		Stock samsung = new Stock("삼성전자보통주", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("삼성전자보통주", price);
 		int quantity = 5;
 		LocalDateTime orderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
 		given(timeService.now()).willReturn(orderTime);
 
 		// when
-		Order actual = broker.orderBuyStock(account, samsung, quantity);
+		Order actual = broker.orderBuyStock(account, samsung, quantity, price);
 
 		// then
-		Order expected = Order.buy(account, samsung, quantity, orderTime);
+		Order expected = Order.buy(account, samsung, quantity, price, orderTime);
 		assertThat(actual).isEqualTo(expected);
 	}
 
@@ -50,15 +51,16 @@ class BrokerTest {
 	void orderSellStock() {
 		// given
 		Account account = new Account(1L);
-		Stock samsung = new Stock("삼성전자보통주", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("삼성전자보통주", price);
 		int quantity = 5;
 		LocalDateTime orderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
 		given(timeService.now()).willReturn(orderTime);
 
 		// when
-		Order actual = broker.orderSellStock(account, samsung, quantity);
+		Order actual = broker.orderSellStock(account, samsung, quantity, price);
 		// then
-		Order expected = Order.sell(account, samsung, quantity, orderTime);
+		Order expected = Order.sell(account, samsung, quantity, price, orderTime);
 		assertThat(actual).isEqualTo(expected);
 	}
 }

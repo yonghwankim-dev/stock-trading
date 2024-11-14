@@ -33,13 +33,14 @@ class MarketTest {
 	void givenOrders_whenAttemptTrade_thenReturnTrade() {
 		// given
 		Account buyer = new Account(1L);
-		Stock samsung = new Stock("삼성전자보통주", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("삼성전자보통주", price);
 		LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-		Order buyOrder = Order.buy(buyer, samsung, 5, buyOrderTime);
+		Order buyOrder = Order.buy(buyer, samsung, 5, price, buyOrderTime);
 
 		Account seller = new Account(2L);
 		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
-		Order sellOrder = Order.sell(seller, samsung, 7, sellOrderTime);
+		Order sellOrder = Order.sell(seller, samsung, 7, price, sellOrderTime);
 
 		market.acceptOrder(buyOrder);
 		market.acceptOrder(sellOrder);
@@ -47,8 +48,7 @@ class MarketTest {
 		Optional<Trade> actual = market.attemptTrade();
 		// then
 		Trade expected = Trade.filled(buyOrder, sellOrder);
-		assertThat(actual).isPresent();
-		assertThat(actual.get()).isEqualTo(expected);
+		assertThat(actual).contains(expected);
 	}
 
 	@DisplayName("매수 주문만 존재하고 매도 주문이 없다면 거래를 체결되지 않는다")
@@ -56,9 +56,11 @@ class MarketTest {
 	void givenOnlyBuyOrders_whenAttemptTrade_thenNotTrade() {
 		// given
 		Account buyer = new Account(1L);
-		Stock samsung = new Stock("삼성전자보통주", 50000);
+		int quantity = 5;
+		int price = 50000;
+		Stock samsung = new Stock("삼성전자보통주", price);
 		LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-		Order buyOrder = Order.buy(buyer, samsung, 5, buyOrderTime);
+		Order buyOrder = Order.buy(buyer, samsung, quantity, price, buyOrderTime);
 
 		market.acceptOrder(buyOrder);
 		// when

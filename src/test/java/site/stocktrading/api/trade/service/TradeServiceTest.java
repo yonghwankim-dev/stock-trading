@@ -48,17 +48,18 @@ class TradeServiceTest {
 	@Test
 	void givenStock_whenBuyStock_thenReturnFuture() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		int quantity = 10;
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
 		given(timeService.now()).willReturn(tradeTime);
 
 		// when
-		CompletableFuture<Order> future = service.buyStock(samsung, quantity);
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity, price);
 
 		// then
 		Order actual = future.join();
-		Order expected = Order.buy(new Account(1L), samsung, quantity, tradeTime);
+		Order expected = Order.buy(new Account(1L), samsung, quantity, price, tradeTime);
 		assertThat(actual).isEqualTo(expected);
 	}
 
@@ -66,13 +67,14 @@ class TradeServiceTest {
 	@Test
 	void givenNegativeQuantity_whenBuyStock_thenCancelTrade() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		int quantity = 0;
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
 		given(timeService.now()).willReturn(tradeTime);
 
 		// when
-		CompletableFuture<Order> future = service.buyStock(samsung, quantity);
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity, price);
 
 		// then
 		Throwable throwable = catchThrowable(future::join);
@@ -85,16 +87,17 @@ class TradeServiceTest {
 	@Test
 	void givenOrders_whenProcessOrders_thenReturnTrade() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
 		given(timeService.now()).willReturn(tradeTime);
 
 		// when
-		Trade actual = service.processOrders(samsung, 10).join();
+		Trade actual = service.processOrders(samsung, 10, price).join();
 
 		// then
-		Order buyOrder = Order.buy(new Account(1L), samsung, 10, tradeTime);
-		Order sellOrder = Order.sell(new Account(1L), samsung, 10, tradeTime);
+		Order buyOrder = Order.buy(new Account(1L), samsung, 10, price, tradeTime);
+		Order sellOrder = Order.sell(new Account(1L), samsung, 10, price, tradeTime);
 		Trade expected = Trade.filled(buyOrder, sellOrder);
 		assertThat(actual).isEqualTo(expected);
 	}
@@ -103,12 +106,14 @@ class TradeServiceTest {
 	@Test
 	void givenOrders_whenProcessOrdersWithZeroQuantity_thenNotTrade() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		LocalDateTime tradeTime = LocalDateTime.of(2024, 11, 12, 12, 0, 0);
 		given(timeService.now()).willReturn(tradeTime);
 
+		int quantity = 0;
 		// when
-		Throwable throwable = catchThrowable(() -> service.processOrders(samsung, 0).join());
+		Throwable throwable = catchThrowable(() -> service.processOrders(samsung, quantity, price).join());
 
 		// then
 		String expected = "site.stocktrading.api.trade.exception.TradeException: Trade failed due to an operation failure";

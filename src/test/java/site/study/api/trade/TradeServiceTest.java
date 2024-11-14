@@ -28,10 +28,11 @@ class TradeServiceTest {
 	@Test
 	void givenStockAndQuantity_whenBuyStockWithNotEnoughQuantity_thenReturnNull() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		int quantity = 0;
 		// when
-		CompletableFuture<Order> future = service.buyStock(samsung, quantity)
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity, price)
 			.handle((order, throwable) -> {
 				if (throwable != null) {
 					return null;
@@ -47,10 +48,11 @@ class TradeServiceTest {
 	@Test
 	void givenStockAndQuantity_whenBuyStockWithNotEnoughQuantity_thenThrowException() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		int quantity = 0;
 		// when
-		CompletableFuture<Order> future = service.buyStock(samsung, quantity)
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity, price)
 			.whenComplete((order, throwable) -> {
 				if (throwable != null) {
 					throw new TradeException("fail trade", throwable);
@@ -67,10 +69,11 @@ class TradeServiceTest {
 	@Test
 	void givenStockAndQuantity_whenBuyStockWithNotEnoughQuantity_thenReturnNullUsingHandle() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		int quantity = 0;
 		// when
-		CompletableFuture<Order> future = service.buyStock(samsung, quantity)
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity, price)
 			.whenComplete((order, throwable) -> {
 				if (throwable != null) {
 					throw new TradeException("fail trade", throwable);
@@ -90,10 +93,11 @@ class TradeServiceTest {
 	@Test
 	void givenStockAndQuantity_whenBuyStockWithNotEnoughQuantity_thenReturnNullOrder() {
 		// given
-		Stock samsung = new Stock("samsung", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("samsung", price);
 		int quantity = 0;
 		// when
-		CompletableFuture<Order> future = service.buyStock(samsung, quantity)
+		CompletableFuture<Order> future = service.buyStock(samsung, quantity, price)
 			.exceptionally(throwable -> null);
 
 		// then

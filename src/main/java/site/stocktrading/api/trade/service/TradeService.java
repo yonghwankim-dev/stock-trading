@@ -24,35 +24,35 @@ public class TradeService {
 	private final DelayService delayService;
 	private final TimeService timeService;
 
-	public CompletableFuture<Order> buyStock(Stock stock, int quantity) {
+	public CompletableFuture<Order> buyStock(Stock stock, int quantity, int price) {
 		return CompletableFuture.supplyAsync(() -> {
-			log.info("buyStock: stock={}, quantity={}", stock, quantity);
+			log.info("buyStock: stock={}, quantity={}, price={}", stock, quantity, price);
 			// 비즈니스 로직: 예시로 1초~3초 랜덤 지연
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
-			return Order.buy(new Account(1L), stock, quantity, tradeTime);
+			return Order.buy(new Account(1L), stock, quantity, price, tradeTime);
 		});
 	}
 
-	public CompletableFuture<Order> sellStock(Stock stock, int quantity) {
+	public CompletableFuture<Order> sellStock(Stock stock, int quantity, int price) {
 		return CompletableFuture.supplyAsync(() -> {
 			log.info("sellStock: stock={}, quantity={}", stock, quantity);
 			// 비즈니스 로직: 예시로 1초~3초 지연
 			delayService.delayRandomSecond(1, 3);
 			// 주문 처리 성공
 			LocalDateTime tradeTime = timeService.now();
-			return Order.sell(new Account(1L), stock, quantity, tradeTime);
+			return Order.sell(new Account(1L), stock, quantity, price, tradeTime);
 		});
 	}
 
 	// 매수와 매도 주문을 비동기적으로 처리 후 결과를 받아오는 예시
-	public CompletableFuture<Trade> processOrders(Stock stock, int quantity) {
-		CompletableFuture<Order> buyFuture = buyStock(stock, quantity)
+	public CompletableFuture<Trade> processOrders(Stock stock, int quantity, int price) {
+		CompletableFuture<Order> buyFuture = buyStock(stock, quantity, price)
 			.exceptionally(throwable -> {
 				throw new OrderException("Buy Operation Failed", throwable);
 			});
-		CompletableFuture<Order> sellFuture = sellStock(stock, quantity)
+		CompletableFuture<Order> sellFuture = sellStock(stock, quantity, price)
 			.exceptionally(throwable -> {
 				throw new OrderException("Sell Operation Failed", throwable);
 			});

@@ -20,13 +20,14 @@ class OrderTest {
 	void calFilledQuantity(int buyQuantity, int sellQuantity, int expected) {
 		// given
 		Account buyer = new Account(1L);
-		Stock samsung = new Stock("삼성전자보통주", 50000);
+		int price = 50000;
+		Stock samsung = new Stock("삼성전자보통주", price);
 		LocalDateTime buyOrderTime = LocalDateTime.of(2024, 11, 13, 12, 0, 0);
-		Order buyOrder = Order.buy(buyer, samsung, buyQuantity, buyOrderTime);
+		Order buyOrder = Order.buy(buyer, samsung, buyQuantity, price, buyOrderTime);
 
 		Account seller = new Account(2L);
 		LocalDateTime sellOrderTime = LocalDateTime.of(2024, 11, 13, 11, 0, 0);
-		Order sellOrder = Order.sell(seller, samsung, sellQuantity, sellOrderTime);
+		Order sellOrder = Order.sell(seller, samsung, sellQuantity, price, sellOrderTime);
 		// when
 		int actual = sellOrder.calFilledQuantity(buyOrder);
 		// then

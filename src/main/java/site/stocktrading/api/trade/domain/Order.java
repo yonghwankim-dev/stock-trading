@@ -11,6 +11,7 @@ public class Order {
 	private final Account account;
 	private final Stock stock;
 	private final int quantity;
+	private final int price;
 	private final LocalDateTime time;
 	private final Type type;
 
@@ -20,10 +21,11 @@ public class Order {
 
 	}
 
-	private Order(Account account, Stock stock, int quantity, LocalDateTime time, Type type) {
+	private Order(Account account, Stock stock, int quantity, int price, LocalDateTime time, Type type) {
 		this.account = account;
 		this.stock = stock;
 		this.quantity = quantity;
+		this.price = price;
 		this.time = time;
 		this.type = type;
 
@@ -32,12 +34,12 @@ public class Order {
 		}
 	}
 
-	public static Order buy(Account account, Stock stock, int quantity, LocalDateTime time) {
-		return new Order(account, stock, quantity, time, Type.BUY);
+	public static Order buy(Account account, Stock stock, int quantity, int price, LocalDateTime time) {
+		return new Order(account, stock, quantity, price, time, Type.BUY);
 	}
 
-	public static Order sell(Account account, Stock stock, int quantity, LocalDateTime time) {
-		return new Order(account, stock, quantity, time, Type.SELL);
+	public static Order sell(Account account, Stock stock, int quantity, int price, LocalDateTime time) {
+		return new Order(account, stock, quantity, price, time, Type.SELL);
 	}
 
 	/**
@@ -56,6 +58,10 @@ public class Order {
 
 	public int compareTime(Order order) {
 		return time.compareTo(order.time);
+	}
+
+	public boolean equalStock(Order order) {
+		return this.stock.equals(order.stock);
 	}
 
 	@Override

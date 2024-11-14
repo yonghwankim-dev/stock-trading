@@ -17,16 +17,16 @@ public class Broker {
 		this.timeService = timeService;
 	}
 
-	public Order orderBuyStock(Account buyer, Stock stock, int quantity) {
+	public Order orderBuyStock(Account buyer, Stock stock, int quantity, int price) {
 		LocalDateTime orderTime = timeService.now();
-		Order order = Order.buy(buyer, stock, quantity, orderTime);
+		Order order = Order.buy(buyer, stock, quantity, price, orderTime);
 		market.acceptOrder(order);
 		return order;
 	}
 
-	public Order orderSellStock(Account seller, Stock stock, int quantity) {
+	public Order orderSellStock(Account seller, Stock stock, int quantity, int price) {
 		LocalDateTime orderTime = timeService.now();
-		Order order = Order.sell(seller, stock, quantity, orderTime);
+		Order order = Order.sell(seller, stock, quantity, price, orderTime);
 		market.acceptOrder(order);
 		return order;
 	}
