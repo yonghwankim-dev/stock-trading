@@ -40,16 +40,18 @@ public class Market {
 			Order sellOrder = topSellOrder.get();
 			Trade trade = Trade.filled(buyOrder, sellOrder);
 
-			// Full Execution (완전 체결)
-			if (buyOrder.isFullExecution(sellOrder)) {
+			// 구매 가능한 경우 매수 주문과 매도 주문을 큐에서 제거
+			if (buyOrder.canBuy(sellOrder)) {
 				orderBook.removeTopBuyOrder();
 				orderBook.removeTopSellOrder();
+			}
+
+			// Full Execution (완전 체결)
+			if (buyOrder.isFullExecution(sellOrder)) {
 				return Optional.of(trade);
 			}
 			// Fill (체결)
 			else if (buyOrder.canBuy(sellOrder) && buyOrder.compareQuantity(sellOrder) <= 0) {
-				orderBook.removeTopBuyOrder();
-				orderBook.removeTopSellOrder();
 				buyOrder.fulfill(trade).ifPresent(orderBook::addOrder);
 				sellOrder.fulfill(trade).ifPresent(orderBook::addOrder);
 				return Optional.of(trade);
