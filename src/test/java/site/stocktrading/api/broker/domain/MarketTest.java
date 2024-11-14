@@ -45,7 +45,7 @@ class MarketTest {
 		market.acceptOrder(buyOrder);
 		market.acceptOrder(sellOrder);
 		// when
-		Optional<Trade> actual = market.attemptTrade();
+		Optional<Trade> actual = market.attemptTrade(samsung);
 		// then
 		Trade expected = Trade.filled(buyOrder, sellOrder);
 		assertThat(actual).contains(expected);
@@ -64,7 +64,7 @@ class MarketTest {
 
 		market.acceptOrder(buyOrder);
 		// when
-		Optional<Trade> actual = market.attemptTrade();
+		Optional<Trade> actual = market.attemptTrade(samsung);
 		// then
 		assertThat(actual).isEmpty();
 	}

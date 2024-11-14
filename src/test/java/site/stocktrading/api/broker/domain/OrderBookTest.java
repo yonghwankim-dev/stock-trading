@@ -58,7 +58,6 @@ class OrderBookTest {
 		orders.forEach(orderBook::addOrder);
 
 		// then
-		// 가격 내림차순 - 시간 오름차순으로 정렬되었는지 확인
 		List<Order> buyOrders = orderBook.findBuyOrders();
 		assertThat(buyOrders)
 			.hasSize(3)
