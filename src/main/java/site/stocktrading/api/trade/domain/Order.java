@@ -23,7 +23,7 @@ public class Order {
 
 	public enum Type {
 		BUY,
-		SELL
+		SELL;
 	}
 
 	@Builder(access = AccessLevel.PRIVATE)
@@ -66,6 +66,13 @@ public class Order {
 			.build();
 	}
 
+	private static Order of(Account account, Stock stock, int quantity, int price, LocalDateTime time, Type type) {
+		if (type == Type.BUY) {
+			return buy(account, stock, quantity, price, time);
+		}
+		return sell(account, stock, quantity, price, time);
+	}
+
 	public void acceptOrderBy(Map<Stock, OrderBook> orderBooks) {
 		orderBooks.computeIfAbsent(stock, OrderBook::new).addOrder(this);
 	}
@@ -84,12 +91,21 @@ public class Order {
 		return this.type == Type.BUY;
 	}
 
+	public Order minusQuantity(int quantity) {
+		int minusQuantity = this.quantity - quantity;
+		return of(account, stock, minusQuantity, price, time, type);
+	}
+
 	public int comparePrice(Order order) {
 		return Integer.compare(this.price, order.price);
 	}
 
 	public int compareTime(Order order) {
 		return this.time.compareTo(order.time);
+	}
+
+	public int getQuantity() {
+		return quantity;
 	}
 
 	public int getPrice() {

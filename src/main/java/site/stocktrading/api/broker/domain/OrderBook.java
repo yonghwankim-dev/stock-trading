@@ -61,6 +61,14 @@ public class OrderBook {
 		return Optional.ofNullable(sellOrders.peek());
 	}
 
+	public void removeTopBuyOrder() {
+		buyOrders.poll();
+	}
+
+	public void removeTopSellOrder() {
+		sellOrders.poll();
+	}
+
 	@Override
 	public String toString() {
 		return String.format("(stock=%s, buyOrders=%s, sellOrders=%s)", stock, buyOrders, sellOrders);
